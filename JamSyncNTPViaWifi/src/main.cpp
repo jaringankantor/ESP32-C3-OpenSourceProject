@@ -29,7 +29,7 @@ int scrollShift = 0;
 
 void oledPrint(const char* text) {
   u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_6x10_tr);
+  u8g2.setFont(u8g2_font_7x13_tr);
   u8g2.setCursor(0, 20);
   u8g2.print(text);
   u8g2.sendBuffer();
@@ -47,27 +47,45 @@ void drawClockPage(int xOffset, int h, int m, int s) {
   u8g2.print(bot);
 }
 
-void drawHalloPage(int xOffset) {
-  u8g2.setFont(u8g2_font_logisoso16_tr);
-  u8g2.setCursor(xOffset + 6, 30); // approximately center "HALLO" on 72x40 OLED
-  u8g2.print("HALLO");
+void drawDatePage(int xOffset, const struct tm& t) {
+  static const char* dayNames[] = {
+    "MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"
+  };
+  static const char* monthNames[] = {
+    "JAN", "FEB", "MAR", "APR", "MEI", "JUN",
+    "JUL", "AGS", "SEP", "OKT", "NOV", "DES"
+  };
+
+  char line1[16], line2[16];
+  sprintf(line1, "%s", dayNames[t.tm_wday]);
+  sprintf(line2, "%02d %s %02d", t.tm_mday, monthNames[t.tm_mon], (t.tm_year + 1900) % 100);
+
+  u8g2.setFont(u8g2_font_6x10_tr);
+
+  int line1X = xOffset + (SCREEN_WIDTH - u8g2.getStrWidth(line1)) / 2;
+  int line2X = xOffset + (SCREEN_WIDTH - u8g2.getStrWidth(line2)) / 2;
+
+  u8g2.setCursor(line1X, 15);
+  u8g2.print(line1);
+  u8g2.setCursor(line2X, 34);
+  u8g2.print(line2);
 }
 
-void drawPage(bool isClockPage, int xOffset, int h, int m, int s) {
+void drawPage(bool isClockPage, int xOffset, const struct tm& t) {
   if (isClockPage)
-    drawClockPage(xOffset, h, m, s);
+    drawClockPage(xOffset, t.tm_hour, t.tm_min, t.tm_sec);
   else
-    drawHalloPage(xOffset);
+    drawDatePage(xOffset, t);
 }
 
-void drawFrame(int h, int m, int s) {
+void drawFrame(const struct tm& t) {
   u8g2.clearBuffer();
 
   if (isScrolling) {
-    drawPage(fromClockPage, -scrollShift, h, m, s);
-    drawPage(toClockPage, SCREEN_WIDTH - scrollShift, h, m, s);
+    drawPage(fromClockPage, -scrollShift, t);
+    drawPage(toClockPage, SCREEN_WIDTH - scrollShift, t);
   } else {
-    drawPage(showClockPage, 0, h, m, s);
+    drawPage(showClockPage, 0, t);
   }
 
   u8g2.sendBuffer();
@@ -127,6 +145,6 @@ void loop() {
     }
   }
 
-  drawFrame(timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+  drawFrame(timeinfo);
 }
 
