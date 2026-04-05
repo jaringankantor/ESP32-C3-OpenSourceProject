@@ -159,3 +159,6 @@ temp/
 *.crt
 *.p12
 secrets.*
+
+# Kredensial lokal — jangan commit
+config.h

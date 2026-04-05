@@ -58,15 +58,22 @@ Ganti `COMx` sesuai port board Anda di Windows.
 
 ## Setting `config.h`
 
+> **Penting:** File `config.h` tidak ikut di-commit ke Git (sudah ada di `.gitignore`).
+> Template tersedia di `config.example.h`.
+
 ### 1) `JamSyncNTPViaWifi/src/config.h`
 
-Edit file ini sebelum upload:
+Salin template lalu isi kredensial:
+
+```bash
+cp src/config.example.h src/config.h
+```
 
 ```c
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define WIFI_SSID "NAMA_WIFI_ANDA"
+#define WIFI_SSID     "NAMA_WIFI_ANDA"
 #define WIFI_PASSWORD "PASSWORD_WIFI_ANDA"
 
 #endif
@@ -90,6 +97,17 @@ Edit teks yang ingin ditampilkan di OLED:
 ```
 
 Ganti nilai `TextTampil` sesuai kebutuhan, misalnya `"HELLO"`.
+
+## Fitur `JamSyncNTPViaWifi`
+
+OLED menampilkan dua halaman yang bergantian setiap **3 detik** dengan animasi scroll horizontal non-blocking:
+
+| Halaman | Konten |
+|---------|--------|
+| 1 | Jam `HH:MM` (baris 1) dan detik `SS` (baris 2) |
+| 2 | Teks nama (`HALLO` / sesuaikan di `drawHalloPage`) |
+
+Karena animasi non-blocking, nilai detik tetap diperbarui secara real-time saat transisi berlangsung.
 
 ## Catatan OLED 72x40 pada ESP32-C3
 
