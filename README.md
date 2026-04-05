@@ -12,6 +12,12 @@ Kumpulan contoh program untuk ESP32-C3 dengan OLED 72x40 (I2C).
 	- VS Code + ekstensi PlatformIO IDE, atau
 	- PlatformIO CLI
 
+## Schema Microcontroller
+
+![ESP32-C3 dengan OLED 72x40 Schema](assets/SchemeByMario.png)
+
+*Diagram koneksi ESP32-C3 terintegrasi dengan OLED 72x40 (I2C)*
+
 ## Struktur Project
 
 - `BlinkLedGPI08`: contoh blink LED (ESP-IDF)
